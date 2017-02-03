@@ -4,12 +4,13 @@
   "author": "Filipe Tagliatti",
   "private": true,
   "scripts": {
+    "dev": "http-server -p 3000 -c-1",
     "watch": "webpack --progress --colors --watch",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
     "babel-runtime": "^6.0.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap-sass": "^3.3.7",
     "jquery": "^3.1.1",
     "vue": "^1.0.28",
     "vue-resource": "^1.1.2",
@@ -23,8 +24,12 @@
     "babel-preset-stage-2": "^6.0.0",
     "cross-env": "^1.0.6",
     "css-loader": "^0.23.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.4",
     "json-loader": "^0.5.4",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "vue-hot-reload-api": "^1.2.0",
     "vue-html-loader": "^1.0.0",

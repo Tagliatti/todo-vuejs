@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -9,7 +10,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolveLoader: {
-    root: path.join(__dirname, 'node_modules'),
+    root: /(node_modules|bower_components)/,
   },
   module: {
     loaders: [
@@ -37,9 +38,33 @@ module.exports = {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /bootstrap-sass\/assets\/javascripts\//,
+        loader: 'imports?jQuery=jquery'
+      },
+      {
+        test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
+        loader: "file"
+      },
+      {
+        test: /\.(scss|css|scss)$/,
+        loader: ExtractTextPlugin.extract("style!css!sass?outputStyle=expanded")
       }
     ]
   },
+  vue: {
+    loaders: {
+      css: ExtractTextPlugin.extract("css!sass")
+    }
+  },
+  plugins: [
+    new ExtractTextPlugin("styles.css", {allChunks: true}),
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+    })
+  ],
   devServer: {
     historyApiFallback: true,
     noInfo: true

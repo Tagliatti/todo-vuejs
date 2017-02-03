@@ -1,17 +1,28 @@
 <script>
+  import TodosService from './todos.service'
+
   export default {
     data() {
-        return {
-            todos: []
-        }
+      return {
+        todos: []
+      }
+    },
+    methods: {
+      remove: function (id) {
+        TodosService.delete({ id: id })
+          .then(TodosService.query)
+          .then(res => {
+            this.$set('todos', res.body)
+          });
+      }
     },
     route: {
       canReuse: true,
       waitForData: true,
       data() {
-        return this.$http.get('http://localhost:8080/todos')
+        return TodosService.query({ _sort: 'id', _order: 'DESC' })
           .then(res => {
-            this.$set('todos', res.body);
+            this.$set('todos', res.body)
           });
       }
     }
@@ -24,6 +35,15 @@
       <div class="panel-body">
         <h3>{{ todo.title }}</h3>
         <p>{{ todo.description }}</p>
+      </div>
+      <div class="panel-footer">
+        <div class="col-xs-6">
+          <button class="btn btn-xs btn-block btn-primary" @click="$router.go({ name: 'todo.edit', params: { id: todo.id } })">Edit</button>
+        </div>
+        <div class="col-xs-6">
+          <button class="btn btn-xs btn-block btn-danger" @click="remove(todo.id)">Delete</button>
+        </div>
+        <div class="clearfix"></div>
       </div>
     </div>
   </div>
@@ -61,7 +81,7 @@
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
     align-self: auto;
-    min-width: 180px;
+    min-width: 200px;
     max-width: 260px;
     margin-left: 10px;
     margin-right: 10px;

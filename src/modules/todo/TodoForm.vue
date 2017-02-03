@@ -1,4 +1,6 @@
 <script>
+  import TodosService from './todos.service'
+
   export default {
     data() {
       return {
@@ -6,8 +8,17 @@
       }
     },
     methods: {
+      saveOrUpdate: function () {
+        (this.todo.id === undefined) ? this.save() : this.update()
+      },
       save: function () {
-        this.$http.post('http://localhost:8080/todos', this.todo)
+        TodosService.save(this.todo)
+          .then(_ => {
+            this.$router.go({ name: 'home' })
+          });
+      },
+      update: function () {
+        TodosService.update({id: this.todo.id}, this.todo)
           .then(_ => {
             this.$router.go({ name: 'home' })
           });
@@ -21,7 +32,7 @@
 
         if (id === undefined) return;
 
-        return this.$http.get('http://localhost:8080/todos/'+ id)
+        return TodosService.get({ id: id})
           .then(res => {
             this.$set('todo', res.body);
           });
@@ -31,7 +42,7 @@
 </script>
 
 <template>
-  <form action="#" class="well" @submit.prevent="save">
+  <form action="#" class="well" @submit.prevent="saveOrUpdate">
     <input type="hidden" v-model="todo.id">
 
     <div class="row">
