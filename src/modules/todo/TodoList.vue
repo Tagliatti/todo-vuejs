@@ -38,10 +38,10 @@
       </div>
       <div class="panel-footer">
         <div class="col-xs-6">
-          <button class="btn btn-xs btn-block btn-primary" @click="$router.go({ name: 'todo.edit', params: { id: todo.id } })">Edit</button>
+          <button class="btn btn-xs btn-block btn-primary" @click="$router.go({ name: 'todo.edit', params: { id: todo.id } })"><i class="fa fa-pencil"></i> Edit</button>
         </div>
         <div class="col-xs-6">
-          <button class="btn btn-xs btn-block btn-danger" @click="remove(todo.id)">Delete</button>
+          <button class="btn btn-xs btn-block btn-danger" @click="remove(todo.id)"><i class="fa fa-trash"></i> Delete</button>
         </div>
         <div class="clearfix"></div>
       </div>

@@ -1,6 +1,8 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var WebpackMd5Hash = require('webpack-md5-hash')
 
 module.exports = {
   entry: {
@@ -8,8 +10,9 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: '[name].js'
+    publicPath: '/',
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
   resolve: {
     alias: {
@@ -71,6 +74,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin({
       filename: "[name].css",
       allChunks: true
@@ -82,7 +86,13 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: ({resource}) => /node_modules/.test(resource)
-    })
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'src/index.ejs',
+      hash: true
+    }),
+    new WebpackMd5Hash(),
   ],
   devServer: {
     historyApiFallback: true,
