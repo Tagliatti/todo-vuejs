@@ -12,61 +12,67 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.html', '.js', '.json', '.vue', 'css', 'scss'],
-  },
-  resolveLoader: {
-    root: /(node_modules|bower_components)/,
+    alias: {
+      'vue$': 'vue/dist/vue.common.js'
+    }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            css: ExtractTextPlugin.extract({
+              loader: 'css-loader',
+              fallback: 'vue-style-loader'
+            })
+          }
+        }
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/
       },
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json-loader'
       },
       {
         test: /\.html$/,
-        loader: 'vue-html'
+        loader: 'vue-html-loader'
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url',
-        query: {
-          limit: 10000,
+        loader: 'file-loader',
+        options: {
           name: '[name].[ext]?[hash]'
         }
       },
       {
         test: /\.woff?$|\.woff2?$|\.ttf$|\.eot$|\.svg$/,
-        loader: "file"
+        loader: "file-loader"
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract("style", "css")
+        loader: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
       },
       {
         test: /\.scss/,
-        loader: ExtractTextPlugin.extract("style", "css!sass")
+        loader: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader!sass-loader"
+        })
       }
     ]
   },
-  vue: {
-    loaders: {
-      css: ExtractTextPlugin.extract("css"),
-      scss: ExtractTextPlugin.extract("css!sass"),
-      js: 'babel'
-    }
-  },
   plugins: [
-    new ExtractTextPlugin("styles.css", {
+    new ExtractTextPlugin({
+      filename: "[name].css",
       allChunks: true
     }),
     new webpack.ProvidePlugin({
@@ -82,6 +88,9 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true
   },
+  performance: {
+    hints: false
+  },
   devtool: '#eval-source-map'
 }
 
@@ -95,10 +104,13 @@ if (process.env.NODE_ENV === 'production') {
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
       compress: {
         warnings: false
       }
     }),
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
   ])
 }
