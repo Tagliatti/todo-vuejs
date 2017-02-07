@@ -4,7 +4,10 @@ import VueResource from 'vue-resource'
 import App from './components/App.vue'
 import routes from './routes'
 
-import "!css-loader!sass-loader!./styles/styles.sass";
+import "bootstrap/dist/js/bootstrap";
+// import "!style!css!bootstrap/dist/css/bootstrap.css";
+// import "!css-loader!sass-loader!./styles/styles.scss";
+import "./styles/styles.scss";
 
 Vue.use(VueResource)
 Vue.use(VueRouter)

@@ -3,11 +3,16 @@ var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    app: './src/main.js'
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'bundle.js'
+    filename: '[name].js'
+  },
+  resolve: {
+    extensions: ['', '.html', '.js', '.json', '.vue', 'css', 'scss'],
   },
   resolveLoader: {
     root: /(node_modules|bower_components)/,
@@ -40,29 +45,37 @@ module.exports = {
         }
       },
       {
-        test: /bootstrap-sass\/assets\/javascripts\//,
-        loader: 'imports?jQuery=jquery'
-      },
-      {
-        test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
+        test: /\.woff?$|\.woff2?$|\.ttf$|\.eot$|\.svg$/,
         loader: "file"
       },
       {
-        test: /\.(scss|css|scss)$/,
-        loader: ExtractTextPlugin.extract("style!css!sass?outputStyle=expanded")
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract("style", "css")
+      },
+      {
+        test: /\.scss/,
+        loader: ExtractTextPlugin.extract("style", "css!sass")
       }
     ]
   },
   vue: {
     loaders: {
-      css: ExtractTextPlugin.extract("css!sass")
+      css: ExtractTextPlugin.extract("css"),
+      scss: ExtractTextPlugin.extract("css!sass"),
+      js: 'babel'
     }
   },
   plugins: [
-    new ExtractTextPlugin("styles.css", {allChunks: true}),
+    new ExtractTextPlugin("styles.css", {
+      allChunks: true
+    }),
     new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
+      $: "jquery",
+      jQuery: "jquery"
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: ({resource}) => /node_modules/.test(resource)
     })
   ],
   devServer: {
