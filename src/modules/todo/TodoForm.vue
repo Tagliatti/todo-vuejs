@@ -8,6 +8,13 @@
       }
     },
     methods: {
+      validate: function () {
+        this.$validator.validateAll()
+
+        if (!this.errors.any()) {
+          this.saveOrUpdate()
+        }
+      },
       saveOrUpdate: function () {
         (this.todo.id === undefined) ? this.save() : this.update()
       },
@@ -42,22 +49,28 @@
 </script>
 
 <template>
-  <form action="#" class="well" @submit.prevent="saveOrUpdate">
+  <form action="#" class="well" @submit.prevent="validate">
     <input type="hidden" v-model="todo.id">
 
     <div class="row">
       <div class="col-md-12">
-        <div class="form-group">
-          <label for="" class="control-label">Title</label>
-          <input type="text" class="form-control" v-model="todo.title">
+        <div class="form-group" :class="{'has-error': errors.has('title')}">
+          <label for="title" class="control-label">Title</label>
+          <input type="text" class="form-control" v-model="todo.title" id="title"
+                 v-validate data-vv-rules="required" name="title">
+
+          <p class="text-danger" v-if="errors.has('title')">{{ errors.first('title') }}</p>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="form-group">
-          <label for="" class="control-label">Description</label>
-          <textarea class="form-control" v-model="todo.description"></textarea>
+        <div class="form-group" :class="{'has-error': errors.has('description')}">
+          <label for="description" class="control-label">Description</label>
+          <textarea class="form-control" v-model="todo.description" id="description"
+                    v-validate data-vv-rules="required" name="description"></textarea>
+
+          <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
         </div>
       </div>
     </div>

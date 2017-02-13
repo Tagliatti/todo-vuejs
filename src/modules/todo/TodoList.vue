@@ -10,7 +10,7 @@
     methods: {
       remove: function (id) {
         TodosService.delete({ id: id })
-          .then(TodosService.query)
+          .then(TodosService.query.query({ _sort: 'id', _order: 'DESC' }))
           .then(res => {
             this.$set('todos', res.body)
           });
